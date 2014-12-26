@@ -18,6 +18,18 @@ function checkArgs() {
 	return true;
 }
 
+function title(text) {
+	return '<h1>' + text + '</h1>';
+}
+
+function book(text) {
+	return '<h2>' + text + '</h2>';
+}
+
+function chapter(text) {
+	return '<h3>' + text + '</h3>';
+}
+
 if (!checkArgs()) {
 	process.exit();
 } else {
