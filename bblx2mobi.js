@@ -4,7 +4,7 @@ var fs = require('fs'),
 	lang = process.argv[3],
 	db = null,
 	bookMinValue = 1,
-	bookMaxValue = 66,
+	bookMaxValue = 1,//66,
 	books = null,
 	data = null;
 
@@ -54,12 +54,40 @@ function generateToc(i, title) {
 	return '<li class="toc-Chapter-rw" id="toc-chapter_'+i+'"><a href="chapter_'+i+'.xhtml">'+title+'</a></li>';
 }
 
+function generateEpub(data) {
+	console.log(data);
+}
+
 if (!checkArgs()) {
 	process.exit();
 } else {
 	db = new sqlite3.Database(bblxFilename);
-	db.get('SELECT Book, Chapter, Verse, Scripture FROM Bible WHERE Book BETWEEN $bookMinValue AND $bookMaxValue', {$bookMinValue: bookMinValue, $bookMaxValue: bookMaxValue}, function(err, row) {
+	data = new Array();
+	// var lastChapter = 0,
+	// 	lastBook = 0;
+	db.each('SELECT Book, Chapter, Verse, Scripture FROM Bible WHERE Book BETWEEN $bookMinValue AND $bookMaxValue', {$bookMinValue: bookMinValue, $bookMaxValue: bookMaxValue}, function(err, row) {
 
+		var book = row.Book,
+			chapter = row.Chapter,
+			verse = row.Verse,
+			scripture = row.Scripture;
+
+		if(data[book] === undefined) {
+			data[book] = {title: books[book], book: book};
+		}
+
+		if(data[book].chapters === undefined) {
+			data[book].chapters = [];
+		}
+
+		if(data[book].chapters[chapter] === undefined) {
+			data[book].chapters[chapter] = [];
+		}
+
+		data[book].chapters[chapter][verse] = scripture;
+
+	}, function(err, rows) {
+		generateEpub(data);
 	});
 }
 
