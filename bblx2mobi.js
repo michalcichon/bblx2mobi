@@ -63,8 +63,6 @@ if (!checkArgs()) {
 } else {
 	db = new sqlite3.Database(bblxFilename);
 	data = new Array();
-	// var lastChapter = 0,
-	// 	lastBook = 0;
 	db.each('SELECT Book, Chapter, Verse, Scripture FROM Bible WHERE Book BETWEEN $bookMinValue AND $bookMaxValue', {$bookMinValue: bookMinValue, $bookMaxValue: bookMaxValue}, function(err, row) {
 
 		var book = row.Book,
