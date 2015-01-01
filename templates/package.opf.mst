@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="3.0" xml:lang="en" unique-identifier="pub-id" prefix="cc: http://creativecommons.org/ns#">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:title id="title">{{title}}</dc:title>
+    <meta refines="#title" property="title-type">main</meta>
+    <dc:creator id="creator">{{creator}}</dc:creator>
+    <meta refines="#creator" property="file-as">{{creatorFileAs}}</meta>
+    <meta refines="#creator" property="role" scheme="marc:relators">aut</meta>
+    <dc:identifier id="pub-id">{{pubId}}</dc:identifier>
+    <dc:language>{{lang}}</dc:language>
+    <meta property="dcterms:modified">{{modified}}</meta>
+    <dc:publisher>{{publisher}}</dc:publisher>
+    <dc:contributor id="contrib1">{{contributor}}</dc:contributor>
+    <meta refines="#contrib1" property="role" scheme="marc:relators">mrk</meta>
+    <dc:rights>This work is shared with the public using the Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) license.</dc:rights>        
+    <link rel="cc:license" href="http://creativecommons.org/licenses/by-sa/3.0/"/>
+    <meta property="cc:attributionURL">{{attributionURL}}</meta>
+  </metadata>
+  <manifest>
+    <item id="font.stix.regular" href="fonts/STIXGeneral.otf"
+      media-type="application/vnd.ms-opentype"/>
+    <item id="font.stix.italic" href="fonts/STIXGeneralItalic.otf"
+      media-type="application/vnd.ms-opentype"/>
+    <item id="font.stix.bold" href="fonts/STIXGeneralBol.otf"
+      media-type="application/vnd.ms-opentype"/>
+    <item id="font.stix.bold.italic" href="fonts/STIXGeneralBolIta.otf"
+      media-type="application/vnd.ms-opentype"/>
+    <item id="toc" properties="nav" href="toc.xhtml" media-type="application/xhtml+xml"/>
+    <item id="cover" href="cover.xhtml" media-type="application/xhtml+xml"/>
+    <item id="cover-image" properties="cover-image" href="images/{coverImage}"
+      media-type="image/jpeg"/>
+    <item id="style" href="css/stylesheet.css" media-type="text/css"/>
+    <!--item id="xchapter_001" href="chapter_001.xhtml" media-type="application/xhtml+xml"/-->
+    {{#chapters}}
+    <item id="{{id}}" href="{{filename}}" media-type="application/xhtml+xml"/>
+    {{/chaters}}
+    <!-- 
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+ -->
+
+  </manifest>
+  <spine>
+    <itemref idref="cover" linear="no"/>
+    {{#chapters}}
+    <itemref linear="yes" idref="{{id}}"/>
+    {{/chapters}}
+    <itemref idref="toc" linear="no"/>
+  </spine>
+</package>
+

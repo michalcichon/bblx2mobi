@@ -6,6 +6,7 @@ A tool to generate mobi ebooks from e-Sword bblx files.
 
 * node.js
 * npm install sqlite3
+* npm install mustache
 
 ## Usage
 

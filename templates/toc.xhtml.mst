@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+   <head>
+      <title>{{title}}</title>
+      <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
+      <meta charset="utf-8"/>
+   </head>
+   <body>
+      <section class="frontmatter TableOfContents" epub:type="frontmatter toc">
+         <header>
+            <h1>{{contents}}</h1>
+         </header>
+         <nav xmlns:epub="http://www.idpf.org/2007/ops" epub:type="toc" id="toc">
+            <ol>
+               <li class="toc-BookTitlePage-rw" id="toc-titlepage">
+                  <a href="titlepage.xhtml">{{title}}</a>
+               </li>
+
+               {{#chapters}}
+               <li class="toc-Chapter-rw" id="{{id}}">
+                  <a href="{{filename}}">{{title}}</a>
+               </li>
+               {{/chapters}}
+            </ol>
+         </nav>
+      </section>
+   </body>
+</html>
