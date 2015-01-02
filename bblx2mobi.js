@@ -203,11 +203,17 @@ function preparePackage(tempDir) {
 function generateEpub(data) {
 	console.log('Start generating epub...');
 	var tempDir = bblxFilename + '.temp';
-	fs.createReadStream('epub-static.zip').pipe(unzip.Extract({ path: tempDir }));
-	prepareCover(tempDir);
-	prepareToc(tempDir);
-	prepareBooks(tempDir);
-	preparePackage(tempDir);
+	fs.createReadStream('epub-static.zip')
+		.pipe(unzip.Extract({ path: tempDir }))
+		.on('error', function(err) {
+			printError(err);
+		})
+		.on('close', function() {
+			prepareCover(tempDir);
+			prepareToc(tempDir);
+			prepareBooks(tempDir);
+			preparePackage(tempDir);		
+		});
 }
 
 if (!checkArgs()) {
