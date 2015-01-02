@@ -32,3 +32,4 @@ node_modules
 #output files
 *.mobi
 unversioned/
+bible.bblx.temp/
