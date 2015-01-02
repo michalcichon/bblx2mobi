@@ -14,7 +14,7 @@
     <meta refines="#contrib1" property="role" scheme="marc:relators">mrk</meta>
     <dc:rights>This work is shared with the public using the Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) license.</dc:rights>        
     <link rel="cc:license" href="http://creativecommons.org/licenses/by-sa/3.0/"/>
-    <meta property="cc:attributionURL">{{attributionURL}}</meta>
+    <meta property="cc:attributionURL">{{{attributionURL}}}</meta>
   </metadata>
   <manifest>
     <item id="font.stix.regular" href="fonts/STIXGeneral.otf"
@@ -30,13 +30,9 @@
     <item id="cover-image" properties="cover-image" href="images/{coverImage}"
       media-type="image/jpeg"/>
     <item id="style" href="css/stylesheet.css" media-type="text/css"/>
-    <!--item id="xchapter_001" href="chapter_001.xhtml" media-type="application/xhtml+xml"/-->
     {{#chapters}}
     <item id="{{id}}" href="{{filename}}" media-type="application/xhtml+xml"/>
-    {{/chaters}}
-    <!-- 
-    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
- -->
+    {{/chapters}}
 
   </manifest>
   <spine>

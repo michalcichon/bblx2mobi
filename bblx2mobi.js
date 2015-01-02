@@ -18,11 +18,11 @@ var books_pl = new Array('','Księga Rodzaju','Księga Wyjścia','Księga Kapła
 			'title': 'Pismo Święte',
 			'coverImage': 'cover.jpg',
 			'contents': 'Spis treści',
-			'creators': 'Bóg',
+			'creator': 'Bóg',
 			'creatorFileAs': 'BÓG',
 			'pubId': 'com.github.michalcichon.bblx2mobi.pismoSwiete',
 			'lang': 'pl-PL',
-			'modified': '2012-01-18T12:47:00Z',
+			'modified': new Date().toISOString(),
 			'publisher': 'bblx2mobi',
 			'contributor': 'Michal Cichon',
 			'attributionURL': 'http://github.com/michalcichon/bblx2mobi'
@@ -31,11 +31,11 @@ var books_pl = new Array('','Księga Rodzaju','Księga Wyjścia','Księga Kapła
 			'title': 'Holy Bible',
 			'coverImage': 'cover.jpg',
 			'contents': 'Contents',
-			'creators': 'God',
+			'creator': 'God',
 			'creatorFileAs': 'GOD',
-			'pubId': 'com.github.michalcichon.bblx2mobi.pismoSwiete',
+			'pubId': 'com.github.michalcichon.bblx2mobi.holyBible',
 			'lang': 'en-US',
-			'modified': '2012-01-18T12:47:00Z',
+			'modified': new Date().toISOString(),
 			'publisher': 'bblx2mobi',
 			'contributor': 'Michal Cichon',
 			'attributionURL': 'http://github.com/michalcichon/bblx2mobi'
@@ -72,16 +72,6 @@ function formatNumber_100(i) {
 		i = "00" + i;
 	else if (i<100)
 		i = "0" + i;
-	return i;
-}
-
-function formatNumber_1000(i) {
-	if (i<10)
-		i = "000" + i;
-	else if (i<100)
-		i = "00" + i;
-	else if (i<1000)
-		i = "000" + i;
 	return i;
 }
 
@@ -185,8 +175,25 @@ function prepareBooks(tempDir) {
 	}
 }
 
-function preparePackage() {
+function preparePackage(tempDir) {
+	console.log('Preparing package...');
+	var tpl = fs.readFileSync('templates/package.opf.mst', 'utf8'),
+		values = Object.create(configs[lang]);
+	if(tpl) {
+		values.chapters = [];
+		for(var i=1, len=data.length; i<len; ++i) {
+			var num = formatNumber_100(i);
+			values.chapters.push({ id: 'xchapter_' + num, filename: 'chapter_' + num + '.xhtml' });
+		}
 
+		var rendered = mustache.render(tpl, values);
+		try {
+				fs.writeFileSync(tempDir + '/OPS/package.opf', rendered);
+				console.log('Package package.opf prepred.');
+			} catch(err) {
+				printError(err);
+			}
+	}
 }
 
 
@@ -197,6 +204,7 @@ function generateEpub(data) {
 	prepareCover(tempDir);
 	prepareToc(tempDir);
 	prepareBooks(tempDir);
+	preparePackage(tempDir);
 }
 
 if (!checkArgs()) {
