@@ -147,14 +147,15 @@ function generateContent(chapters) {
 			
 			if(verse) {
 				verse = verse.replace('\\f6', '');
+				verse = verse.replace(/"/g, '&quot;');
+				verse = verse.replace('<', '');
 			}
 
-			if(j == 1) {
-				out += '<p><div class="initial-letter">'+i+'</div>' + verse + '</p>';
-			} else {
-				out += '<p><span class="verse">' +j+ '</span>' + verse + '</p>';
-			}
+			if(j == 1)
+				out += '<p><div class="initial-letter">'+i+'</div>';
+			out += '<sup>'+j+'</sup>' + verse;
 		}
+		out += '</p>';
 	}
 
 	return out;
@@ -167,8 +168,7 @@ function prepareBooks(tempDir) {
 		var chapter = {
 			title: configs[lang].title,
 			bookTitle: data[i].title,
-			content: generateContent(data[i].chapters),
-			book: i
+			content: generateContent(data[i].chapters)
 		};
 
 		if (tpl) {
