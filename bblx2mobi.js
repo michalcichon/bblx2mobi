@@ -102,30 +102,32 @@ function prepareToc(tempDir) {
 			chapters: [],
 			title: configs[lang].title,
 			contents: configs[lang].contents
-		};
+		},
+		tocXHTMLTemplate = fs.readFileSync('templates/toc.xhtml.mst', 'utf8'),
+		tocNCXTemplate = fs.readFileSync('templates/toc.ncx.mst', 'utf8');
 
 	for(var i=1, len=data.length; i<len; ++i) {
 		toc.chapters.push({ 
 			title: data[i].title, 
 			id: 'toc-chapter_' + formatNumber_100(data[i].book), 
-			filename: 'chapter_'+formatNumber_100(data[i].book)+'.xhtml'
+			filename: 'chapter_'+formatNumber_100(data[i].book)+'.xhtml',
+			navpoint: 'navpoint' + i,
+			playOrder: i
 		});
 	}
 
-	fs.readFile('templates/toc.xhtml.mst', 'utf8', function(err,tpl) {
-		if(err) {
+	if (tocXHTMLTemplate && tocNCXTemplate) {
+		var renderedXHTML = mustache.render(tocXHTMLTemplate, toc),
+			renderedNCX = mustache.render(tocNCXTemplate, toc);
+
+		try {
+			fs.writeFileSync(tempDir + '/OPS/toc.xhtml', renderedXHTML);
+			fs.writeFileSync(tempDir + '/OPS/toc.ncx', renderedNCX);
+			console.log('Table of contents prepared.');
+		} catch(err) {
 			printError(err);
 		}
-
-		var rendered = mustache.render(tpl, toc);
-		fs.writeFile(tempDir + '/OPS/toc.xhtml', rendered, function(err) {
-			if(err) {
-				printError(err);
-			} else {
-				console.log('Table of contents prepared.');
-			}
-		});
-	});
+	}
 }
 
 function generateContent(chapters) {
@@ -138,7 +140,8 @@ function generateContent(chapters) {
 			if(verse) {
 				verse = verse.replace('\\f6', '');
 				verse = verse.replace(/"/g, '&quot;');
-				verse = verse.replace('<', '');
+				verse = verse.replace('<', '&lt;');
+				verse = verse.replace('>', '&gt;');
 			}
 
 			if(j == 1)
