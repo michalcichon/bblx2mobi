@@ -51,6 +51,14 @@ p + p {
 text-indent: 1.33em;
 }
 
+.initial-letter {
+	float: left;
+}
+
+.verse {
+	
+}
+
 .decoration-rw {
 text-align: center;
 padding-top: 1em;

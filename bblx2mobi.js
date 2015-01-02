@@ -122,12 +122,12 @@ function prepareToc(tempDir) {
 		});
 	}
 
-	fs.readFile('templates/toc.xhtml.mst', 'utf8', function(err,data) {
+	fs.readFile('templates/toc.xhtml.mst', 'utf8', function(err,tpl) {
 		if(err) {
 			printError(err);
 		}
 
-		var rendered = mustache.render(data, toc);
+		var rendered = mustache.render(tpl, toc);
 		fs.writeFile(tempDir + '/OPS/toc.xhtml', rendered, function(err) {
 			if(err) {
 				printError(err);
@@ -138,8 +138,51 @@ function prepareToc(tempDir) {
 	});
 }
 
-function prepareChapters() {
+function generateContent(chapters) {
+	var out = '';
+	for (var i=1, len_i=chapters.length; i<len_i; ++i) {
+		var chapter = chapters[i];
+		for(var j=1, len_j=chapter.length; j<len_j; ++j) {
+			var verse = chapter[j];
+			
+			if(verse) {
+				verse = verse.replace('\\f6', '');
+			}
 
+			if(j == 1) {
+				out += '<p><div class="initial-letter">'+i+'</div>' + verse + '</p>';
+			} else {
+				out += '<p><span class="verse">' +j+ '</span>' + verse + '</p>';
+			}
+		}
+	}
+
+	return out;
+}
+
+function prepareBooks(tempDir) {
+	console.log('Start preparing books...');
+	var tpl = fs.readFileSync('templates/book.xhtml.mst', 'utf8');
+	for (var i=1, len=data.length; i<len; ++i) {
+		var chapter = {
+			title: configs[lang].title,
+			bookTitle: data[i].title,
+			content: generateContent(data[i].chapters),
+			book: i
+		};
+
+		if (tpl) {
+			var rendered = mustache.render(tpl, chapter),
+				filename = 'chapter_' + formatNumber_100(i) + '.xhtml';
+
+			try {
+				fs.writeFileSync(tempDir + '/OPS/' + filename, rendered);
+				console.log('Chapter ' + filename + ' prepred.');
+			} catch(err) {
+				printError(err);
+			}
+		}
+	}
 }
 
 function preparePackage() {
@@ -153,6 +196,7 @@ function generateEpub(data) {
 	fs.createReadStream('epub-static.zip').pipe(unzip.Extract({ path: tempDir }));
 	prepareCover(tempDir);
 	prepareToc(tempDir);
+	prepareBooks(tempDir);
 }
 
 if (!checkArgs()) {
