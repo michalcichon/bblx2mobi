@@ -7,7 +7,7 @@ var fs = require('fs'),
 	lang = process.argv[3],
 	db = null,
 	bookMinValue = 1,
-	bookMaxValue = 1,//66,
+	bookMaxValue = 5,//66,
 	books = null,
 	data = null;
 
@@ -100,13 +100,42 @@ function prepareCover(tempDir) {
 		fs.writeFile(tempDir + '/OPS/cover.xhtml', rendered, function(err) {
 			if(err) {
 				printError(err);
+			} else {
+				console.log('Cover prepared.');
 			}
 		});
 	});
 }
 
-function prepareToc() {
+function prepareToc(tempDir) {
+	var toc = {
+			chapters: [],
+			title: configs[lang].title,
+			contents: configs[lang].contents
+		};
 
+	for(var i=1, len=data.length; i<len; ++i) {
+		toc.chapters.push({ 
+			title: data[i].title, 
+			id: 'toc-chapter_' + formatNumber_100(data[i].book), 
+			filename: 'chapter_'+formatNumber_100(data[i].book)+'.xhtml'
+		});
+	}
+
+	fs.readFile('templates/toc.xhtml.mst', 'utf8', function(err,data) {
+		if(err) {
+			printError(err);
+		}
+
+		var rendered = mustache.render(data, toc);
+		fs.writeFile(tempDir + '/OPS/toc.xhtml', rendered, function(err) {
+			if(err) {
+				printError(err);
+			} else {
+				console.log('Table of contents prepared.');
+			}
+		});
+	});
 }
 
 function prepareChapters() {
@@ -119,9 +148,11 @@ function preparePackage() {
 
 
 function generateEpub(data) {
+	console.log('Start generating epub...');
 	var tempDir = bblxFilename + '.temp';
 	fs.createReadStream('epub-static.zip').pipe(unzip.Extract({ path: tempDir }));
 	prepareCover(tempDir);
+	prepareToc(tempDir);
 }
 
 if (!checkArgs()) {
@@ -129,6 +160,7 @@ if (!checkArgs()) {
 } else {
 	db = new sqlite3.Database(bblxFilename);
 	data = new Array();
+	console.log('Getting data...');
 	db.each('SELECT Book, Chapter, Verse, Scripture FROM Bible WHERE Book BETWEEN $bookMinValue AND $bookMaxValue', {$bookMinValue: bookMinValue, $bookMaxValue: bookMaxValue}, function(err, row) {
 
 		var book = row.Book,

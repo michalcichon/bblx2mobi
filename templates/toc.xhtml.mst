@@ -12,10 +12,6 @@
          </header>
          <nav xmlns:epub="http://www.idpf.org/2007/ops" epub:type="toc" id="toc">
             <ol>
-               <li class="toc-BookTitlePage-rw" id="toc-titlepage">
-                  <a href="titlepage.xhtml">{{title}}</a>
-               </li>
-
                {{#chapters}}
                <li class="toc-Chapter-rw" id="{{id}}">
                   <a href="{{filename}}">{{title}}</a>
