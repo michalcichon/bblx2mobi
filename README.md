@@ -4,13 +4,16 @@ A tool to generate mobi and epub ebooks from e-Sword bblx files.
 
 ## Pre-requirements
 
-* node.js
-* npm install sqlite3
-* npm install mustache
-* npm install unzip
-* npm install archiver --save
-* npm install rimraf
+* node.js -- version 0.10 or later
 * kindlegen available from PATH
+
+## Installing
+
+```
+npm install
+```
+
+After install all dependent libraries should be downloaded.
 
 ## Usage
 
@@ -28,3 +31,15 @@ node bblx2mobi bible.bblx pl
 
 * support generating apocrypha
 * support comments
+
+## Dependencies
+
+```
+"dependencies": {
+    "archiver": "~0.13.0",
+    "mustache": "~1.0.0",
+    "rimraf": "~2.2.8",
+    "sqlite3": "~3.0.4",
+    "unzip": "~0.1.11"
+  }
+```
