@@ -13,7 +13,7 @@ A tool to generate mobi and epub ebooks from e-Sword bblx files.
 npm install
 ```
 
-After install all dependent libraries should be downloaded.
+After install all dependent libraries should be downloaded automatically.
 
 ## Usage
 
