@@ -88,20 +88,17 @@ function generateToc(i, title) {
 }
 
 function prepareCover(tempDir) {
-	fs.readFile('templates/cover.xhtml.mst', 'utf8', function(err,data) {
-		if(err) {
+	var tpl = fs.readFileSync('templates/cover.xhtml.mst', 'utf8');
+
+	if (tpl) {
+		var rendered = mustache.render(tpl, {title: configs[lang].title, coverImage: configs[lang].coverImage});
+		try {
+			fs.writeFileSync(tempDir + '/OPS/cover.xhtml', rendered);
+			fs.writeFileSync(tempDir + '/OPS/images/' + configs[lang].coverImage, fs.readFileSync('images/cover_' + lang + '.jpg'));
+		} catch (err) {
 			printError(err);
 		}
-
-		var rendered = mustache.render(data, {title: configs[lang].title, coverImage: configs[lang].coverImage});
-		fs.writeFile(tempDir + '/OPS/cover.xhtml', rendered, function(err) {
-			if(err) {
-				printError(err);
-			} else {
-				console.log('Cover prepared.');
-			}
-		});
-	});
+	}
 }
 
 function prepareToc(tempDir) {
@@ -131,7 +128,7 @@ function prepareToc(tempDir) {
 			fs.writeFileSync(tempDir + '/OPS/toc.xhtml', renderedXHTML);
 			fs.writeFileSync(tempDir + '/OPS/toc.ncx', renderedNCX);
 			console.log('Table of contents prepared.');
-		} catch(err) {
+		} catch (err) {
 			printError(err);
 		}
 	}
@@ -178,7 +175,7 @@ function prepareBooks(tempDir) {
 			try {
 				fs.writeFileSync(tempDir + '/OPS/' + filename, rendered);
 				console.log('Chapter ' + filename + ' prepred.');
-			} catch(err) {
+			} catch (err) {
 				printError(err);
 			}
 		}
@@ -200,7 +197,7 @@ function preparePackage(tempDir) {
 		try {
 				fs.writeFileSync(tempDir + '/OPS/package.opf', rendered);
 				console.log('Package package.opf prepred.');
-			} catch(err) {
+			} catch (err) {
 				printError(err);
 			}
 	}
