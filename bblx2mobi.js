@@ -5,6 +5,7 @@ var fs = require('fs'),
 	staticFiles = 'epub-static.zip',
 	bblxFilename = process.argv[2],
 	lang = process.argv[3],
+	defaultLang = 'pl',
 	db = null,
 	bookMinValue = 1,
 	bookMaxValue = 5,//66,
@@ -63,8 +64,9 @@ function checkArgs() {
 		return false;
 	} else {
 		console.log(usage);
+		console.log('Setting default language: ' + defaultLang);
 		books = books_pl;
-		lang = 'pl';
+		lang = defaultLang;
 	}
 	return true;
 }
@@ -174,7 +176,7 @@ function prepareBooks(tempDir) {
 
 			try {
 				fs.writeFileSync(tempDir + '/OPS/' + filename, rendered);
-				console.log('Chapter ' + filename + ' prepred.');
+				console.log('Chapter ' + filename + ' prepared.');
 			} catch (err) {
 				printError(err);
 			}
