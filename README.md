@@ -1,6 +1,6 @@
 # bblx2mobi
 
-A tool to generate mobi ebooks from e-Sword bblx files.
+A tool to generate mobi and epub ebooks from e-Sword bblx files.
 
 ## Pre-requirements
 
@@ -8,6 +8,8 @@ A tool to generate mobi ebooks from e-Sword bblx files.
 * npm install sqlite3
 * npm install mustache
 * npm install unzip
+* npm install archiver --save
+* npm install rimraf
 
 ## Usage
 
@@ -21,3 +23,6 @@ Example:
 node bblx2mobi bible.bblx pl
 ```
 
+## To do
+
+* support generating apocrypha

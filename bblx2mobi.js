@@ -2,6 +2,8 @@ var fs = require('fs'),
 	unzip = require('unzip'),
 	sqlite3 = require("sqlite3").verbose(),
 	mustache = require('mustache'),
+	archiver = require('archiver'),
+	rimraf = require('rimraf'),
 	staticFiles = 'epub-static.zip',
 	bblxFilename = process.argv[2],
 	lang = process.argv[3],
@@ -205,6 +207,38 @@ function preparePackage(tempDir) {
 	}
 }
 
+function compileEbook(tempDir) {
+	var epubFilename = bblxFilename + '.epub',
+		output = fs.createWriteStream(epubFilename),
+		archive = archiver('zip');
+
+	output.on('close', function() {
+		console.log('Epub '+epubFilename+' created. ' + archive.pointer() + ' total bytes.');
+		cleanUp(tempDir);
+	});
+
+	archive.on('error', function(err) {
+		throw err;
+	});
+
+	archive.pipe(output);
+
+	archive.bulk([
+		{expand: true, cwd: tempDir, src: ['**'], dest: '/'}
+	]);
+
+	archive.finalize();
+}
+
+function cleanUp(tempDir) {
+	rimraf(tempDir, function(err) {
+		if (err) {
+			printError(err);
+		} else {
+			console.log('Cleanup successfully.')
+		}
+	});
+}
 
 function generateEpub(data) {
 	console.log('Start generating epub...');
@@ -218,7 +252,8 @@ function generateEpub(data) {
 			prepareCover(tempDir);
 			prepareToc(tempDir);
 			prepareBooks(tempDir);
-			preparePackage(tempDir);		
+			preparePackage(tempDir);
+			compileEbook(tempDir);
 		});
 }
 
