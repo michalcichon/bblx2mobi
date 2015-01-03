@@ -4,6 +4,7 @@ var fs = require('fs'),
 	mustache = require('mustache'),
 	archiver = require('archiver'),
 	rimraf = require('rimraf'),
+	child_process = require('child_process'),
 	staticFiles = 'epub-static.zip',
 	bblxFilename = process.argv[2],
 	lang = process.argv[3],
@@ -209,12 +210,20 @@ function preparePackage(tempDir) {
 
 function compileEbook(tempDir) {
 	var epubFilename = bblxFilename + '.epub',
+		mobiFilename = bblxFilename + '.mobi',
 		output = fs.createWriteStream(epubFilename),
 		archive = archiver('zip');
 
 	output.on('close', function() {
 		console.log('Epub '+epubFilename+' created. ' + archive.pointer() + ' total bytes.');
-		cleanUp(tempDir);
+		var exec = child_process.exec;
+		exec('kindlegen ' + epubFilename + ' -o ' + mobiFilename, function(err, stdout, stderr) {
+			console.log(stdout);
+			if (fs.existsSync(mobiFilename)) {
+				console.log('Mobi ' + mobiFilename + ' created.');
+			}
+			cleanUp(tempDir);
+		});
 	});
 
 	archive.on('error', function(err) {

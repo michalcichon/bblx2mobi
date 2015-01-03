@@ -10,6 +10,7 @@ A tool to generate mobi and epub ebooks from e-Sword bblx files.
 * npm install unzip
 * npm install archiver --save
 * npm install rimraf
+* kindlegen available from PATH
 
 ## Usage
 
@@ -26,3 +27,4 @@ node bblx2mobi bible.bblx pl
 ## To do
 
 * support generating apocrypha
+* support comments
