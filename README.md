@@ -31,6 +31,7 @@ node bblx2mobi bible.bblx pl
 
 * support generating apocrypha
 * support comments
+* fix encoding issues in some versions of bblx unicode files
 
 ## Dependencies
 
