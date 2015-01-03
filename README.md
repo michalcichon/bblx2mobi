@@ -18,7 +18,7 @@ After install all dependent libraries should be downloaded automatically.
 ## Usage
 
 ```
-node bblx2mobi <fileame> <lang>
+node bblx2mobi <filename> <lang>
 ```
 
 Example:
