@@ -54,6 +54,13 @@ function checkArgs() {
 		books = books_pl;
 	} else if (lang == 'en') {
 		books = books_en;
+	} else if (lang) {
+		var availableLangs = '';
+		for (var config in configs)
+			availableLangs += config + ' ';
+		console.log(usage);
+		console.log('Available languages: ' + availableLangs);
+		return false;
 	} else {
 		console.log(usage);
 		books = books_pl;
