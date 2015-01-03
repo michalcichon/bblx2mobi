@@ -11,7 +11,7 @@ var fs = require('fs'),
 	defaultLang = 'pl',
 	db = null,
 	bookMinValue = 1,
-	bookMaxValue = 5,//66,
+	bookMaxValue = 66,
 	books = null,
 	data = null;
 
