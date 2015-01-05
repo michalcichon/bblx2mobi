@@ -1,6 +1,6 @@
 {
   "name": "bblx2mobi",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "bblx2mobi.js",
   "description": "A tool to generate mobi and epub ebooks from e-Sword bblx files",
   "homepage": "https://github.com/michalcichon/bblx2mobi",
