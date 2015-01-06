@@ -143,19 +143,24 @@ function generateContent(chapters) {
 	var out = '';
 	for (var i=1, len_i=chapters.length; i<len_i; ++i) {
 		var chapter = chapters[i];
-		for(var j=1, len_j=chapter.length; j<len_j; ++j) {
-			var verse = chapter[j];
-			
-			if(verse) {
-				verse = verse.replace('\\f6', '');
-				verse = verse.replace(/"/g, '&quot;');
-				verse = verse.replace('<', '&lt;');
-				verse = verse.replace('>', '&gt;');
-			}
 
-			if(j == 1)
-				out += '<p><div class="initial-letter">'+i+'</div>';
-			out += '<sup>'+j+'</sup>' + verse;
+		if(chapter) {
+			for(var j=1, len_j=chapter.length; j<len_j; ++j) {
+				var verse = chapter[j];
+				
+				if(verse) {
+					verse = verse.replace('\\f6', '');
+					verse = verse.replace(/"/g, '&quot;');
+					verse = verse.replace('<', '&lt;');
+					verse = verse.replace('>', '&gt;');
+				}
+
+				if(j == 1)
+					out += '<p><div class="initial-letter">'+i+'</div>';
+				out += '<sup>'+j+'</sup>' + verse;
+			}	
+		} else {
+			console.log('\tIndex ' + i + ' undefined.');
 		}
 		out += '</p>';
 	}
@@ -217,7 +222,7 @@ function compileEbook(tempDir) {
 	output.on('close', function() {
 		console.log('Epub '+epubFilename+' created. ' + archive.pointer() + ' total bytes.');
 		var exec = child_process.exec;
-		exec('kindlegen ' + epubFilename + ' -o ' + mobiFilename, function(err, stdout, stderr) {
+		exec('kindlegen ' + epubFilename, function(err, stdout, stderr) {
 			console.log(stdout);
 			if (fs.existsSync(mobiFilename)) {
 				console.log('Mobi ' + mobiFilename + ' created.');
