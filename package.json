@@ -1,6 +1,6 @@
 {
   "name": "bblx2mobi",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "bin": {
     "bblx2mobi": "bin/bblx2mobi"
   },

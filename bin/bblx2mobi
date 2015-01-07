@@ -124,13 +124,18 @@ function prepareToc(tempDir) {
 		tocNCXTemplate = fs.readFileSync(templatesDir + '/toc.ncx.mst', 'utf8');
 
 	for(var i=1, len=data.length; i<len; ++i) {
-		toc.chapters.push({ 
-			title: data[i].title, 
-			id: 'toc-chapter_' + formatNumber_100(data[i].book), 
-			filename: 'chapter_'+formatNumber_100(data[i].book)+'.xhtml',
-			navpoint: 'navpoint' + i,
-			playOrder: i
-		});
+		if (data[i]) {
+			toc.chapters.push({ 
+				title: data[i].title, 
+				id: 'toc-chapter_' + formatNumber_100(data[i].book), 
+				filename: 'chapter_'+formatNumber_100(data[i].book)+'.xhtml',
+				navpoint: 'navpoint' + i,
+				playOrder: i
+			});
+		} else {
+			console.log('INFO: Chapter ' + i + ' undefined.');
+		}
+		
 	}
 
 	if (tocXHTMLTemplate && tocNCXTemplate) {
@@ -152,23 +157,23 @@ function generateContent(chapters) {
 	for (var i=1, len_i=chapters.length; i<len_i; ++i) {
 		var chapter = chapters[i];
 
-		if(chapter) {
+		if (chapter) {
 			for(var j=1, len_j=chapter.length; j<len_j; ++j) {
 				var verse = chapter[j];
 				
-				if(verse) {
+				if (verse) {
 					verse = verse.replace('\\f6', '');
 					verse = verse.replace(/"/g, '&quot;');
 					verse = verse.replace('<', '&lt;');
 					verse = verse.replace('>', '&gt;');
 				}
 
-				if(j == 1)
+				if (j == 1)
 					out += '<p><div class="initial-letter">'+i+'</div>';
 				out += '<sup>'+j+'</sup>' + verse;
 			}	
 		} else {
-			console.log('\tIndex ' + i + ' undefined.');
+			console.log('INFO: Chapter ' + i + ' undefined.');
 		}
 		out += '</p>';
 	}
@@ -180,21 +185,23 @@ function prepareBooks(tempDir) {
 	console.log('Start preparing books...');
 	var tpl = fs.readFileSync(templatesDir + '/book.xhtml.mst', 'utf8');
 	for (var i=1, len=data.length; i<len; ++i) {
-		var chapter = {
-			title: configs[lang].title,
-			bookTitle: data[i].title,
-			content: generateContent(data[i].chapters)
-		};
+		if (data[i]) {
+			var chapter = {
+				title: configs[lang].title,
+				bookTitle: data[i].title,
+				content: generateContent(data[i].chapters)
+			};
 
-		if (tpl) {
-			var rendered = mustache.render(tpl, chapter),
-				filename = 'chapter_' + formatNumber_100(i) + '.xhtml';
+			if (tpl) {
+				var rendered = mustache.render(tpl, chapter),
+					filename = 'chapter_' + formatNumber_100(i) + '.xhtml';
 
-			try {
-				fs.writeFileSync(tempDir + '/OPS/' + filename, rendered);
-				console.log('Chapter ' + filename + ' prepared.');
-			} catch (err) {
-				printError(err);
+				try {
+					fs.writeFileSync(tempDir + '/OPS/' + filename, rendered);
+					console.log('Chapter ' + filename + ' prepared.');
+				} catch (err) {
+					printError(err);
+				}
 			}
 		}
 	}
@@ -204,11 +211,13 @@ function preparePackage(tempDir) {
 	console.log('Preparing package...');
 	var tpl = fs.readFileSync(templatesDir + '/package.opf.mst', 'utf8'),
 		values = Object.create(configs[lang]);
-	if(tpl) {
+	if (tpl) {
 		values.chapters = [];
 		for(var i=1, len=data.length; i<len; ++i) {
-			var num = formatNumber_100(i);
-			values.chapters.push({ id: 'xchapter_' + num, filename: 'chapter_' + num + '.xhtml' });
+			if (data[i]) {
+				var num = formatNumber_100(i);
+				values.chapters.push({ id: 'xchapter_' + num, filename: 'chapter_' + num + '.xhtml' });
+			}
 		}
 
 		var rendered = mustache.render(tpl, values);
@@ -292,15 +301,15 @@ if (!checkArgs()) {
 			verse = row.Verse,
 			scripture = row.Scripture;
 
-		if(data[book] === undefined) {
+		if (data[book] === undefined) {
 			data[book] = {title: books[book], book: book};
 		}
 
-		if(data[book].chapters === undefined) {
+		if (data[book].chapters === undefined) {
 			data[book].chapters = [];
 		}
 
-		if(data[book].chapters[chapter] === undefined) {
+		if (data[book].chapters[chapter] === undefined) {
 			data[book].chapters[chapter] = [];
 		}
 
