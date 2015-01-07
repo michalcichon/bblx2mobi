@@ -1,3 +1,9 @@
+#!/usr/bin/env node
+
+'use strict';
+
+process.title = 'bblx2mobi';
+
 var fs = require('fs'),
 	unzip = require('unzip'),
 	sqlite3 = require("sqlite3").verbose(),
@@ -302,4 +308,3 @@ if (!checkArgs()) {
 		generateEpub(data);
 	});
 }
-

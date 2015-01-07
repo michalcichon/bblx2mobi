@@ -1,7 +1,9 @@
 {
   "name": "bblx2mobi",
-  "version": "0.1.1",
-  "main": "bblx2mobi.js",
+  "version": "0.1.2",
+  "bin": {
+    "bblx2mobi": "bin/bblx2mobi"
+  },
   "description": "A tool to generate mobi and epub ebooks from e-Sword bblx files",
   "homepage": "https://github.com/michalcichon/bblx2mobi",
   "author": "Michal Cichon <michal.cichon@aol.com>",
@@ -9,6 +11,7 @@
     "type": "git",
     "url": "https://github.com/michalcichon/bblx2mobi.git"
   },
+  "preferGlobal": true,
   "dependencies": {
     "archiver": "~0.13.0",
     "mustache": "~1.0.0",

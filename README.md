@@ -10,7 +10,7 @@ A tool to generate mobi and epub ebooks from e-Sword bblx files.
 ## Installing
 
 ```
-npm install bblx2mobi
+npm install -g bblx2mobi
 ```
 
 After install all dependent libraries should be downloaded automatically.
@@ -18,13 +18,13 @@ After install all dependent libraries should be downloaded automatically.
 ## Usage
 
 ```
-node bblx2mobi <filename> <lang>
+bblx2mobi <filename> <lang>
 ```
 
 Example:
 
 ```
-node bblx2mobi bible.bblx pl
+bblx2mobi bible.bblx pl
 ```
 
 ## To do
