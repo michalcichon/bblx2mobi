@@ -11,7 +11,9 @@ var fs = require('fs'),
 	archiver = require('archiver'),
 	rimraf = require('rimraf'),
 	child_process = require('child_process'),
-	staticFiles = 'epub-static.zip',
+	staticFiles = __dirname + '/epub-static.zip',
+	templatesDir = __dirname + '/../templates',
+	imagesDir = __dirname + '/../images',
 	bblxFilename = process.argv[2],
 	lang = process.argv[3],
 	defaultLang = 'pl',
@@ -99,13 +101,13 @@ function generateToc(i, title) {
 }
 
 function prepareCover(tempDir) {
-	var tpl = fs.readFileSync('templates/cover.xhtml.mst', 'utf8');
+	var tpl = fs.readFileSync(templatesDir + '/cover.xhtml.mst', 'utf8');
 
 	if (tpl) {
 		var rendered = mustache.render(tpl, {title: configs[lang].title, coverImage: configs[lang].coverImage});
 		try {
 			fs.writeFileSync(tempDir + '/OPS/cover.xhtml', rendered);
-			fs.writeFileSync(tempDir + '/OPS/images/' + configs[lang].coverImage, fs.readFileSync('images/cover_' + lang + '.jpg'));
+			fs.writeFileSync(tempDir + '/OPS/images/' + configs[lang].coverImage, fs.readFileSync(imagesDir + '/cover_' + lang + '.jpg'));
 		} catch (err) {
 			printError(err);
 		}
@@ -118,8 +120,8 @@ function prepareToc(tempDir) {
 			title: configs[lang].title,
 			contents: configs[lang].contents
 		},
-		tocXHTMLTemplate = fs.readFileSync('templates/toc.xhtml.mst', 'utf8'),
-		tocNCXTemplate = fs.readFileSync('templates/toc.ncx.mst', 'utf8');
+		tocXHTMLTemplate = fs.readFileSync(templatesDir + '/toc.xhtml.mst', 'utf8'),
+		tocNCXTemplate = fs.readFileSync(templatesDir + '/toc.ncx.mst', 'utf8');
 
 	for(var i=1, len=data.length; i<len; ++i) {
 		toc.chapters.push({ 
@@ -176,7 +178,7 @@ function generateContent(chapters) {
 
 function prepareBooks(tempDir) {
 	console.log('Start preparing books...');
-	var tpl = fs.readFileSync('templates/book.xhtml.mst', 'utf8');
+	var tpl = fs.readFileSync(templatesDir + '/book.xhtml.mst', 'utf8');
 	for (var i=1, len=data.length; i<len; ++i) {
 		var chapter = {
 			title: configs[lang].title,
@@ -200,7 +202,7 @@ function prepareBooks(tempDir) {
 
 function preparePackage(tempDir) {
 	console.log('Preparing package...');
-	var tpl = fs.readFileSync('templates/package.opf.mst', 'utf8'),
+	var tpl = fs.readFileSync(templatesDir + '/package.opf.mst', 'utf8'),
 		values = Object.create(configs[lang]);
 	if(tpl) {
 		values.chapters = [];
@@ -263,7 +265,7 @@ function cleanUp(tempDir) {
 function generateEpub(data) {
 	console.log('Start generating epub...');
 	var tempDir = bblxFilename + '.temp';
-	fs.createReadStream('epub-static.zip')
+	fs.createReadStream(staticFiles)
 		.pipe(unzip.Extract({ path: tempDir }))
 		.on('error', function(err) {
 			printError(err);
