@@ -10,7 +10,7 @@ A tool to generate mobi and epub ebooks from e-Sword bblx files.
 ## Installing
 
 ```
-npm install -g bblx2mobi
+npm install bblx2mobi -g
 ```
 
 After install all dependent libraries should be downloaded automatically.

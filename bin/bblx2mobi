@@ -230,7 +230,7 @@ function compileEbook(tempDir) {
 	output.on('close', function() {
 		console.log('Epub '+epubFilename+' created. ' + archive.pointer() + ' total bytes.');
 		var exec = child_process.exec;
-		exec('kindlegen ' + epubFilename, function(err, stdout, stderr) {
+		exec('kindlegen "' + epubFilename + '"', function(err, stdout, stderr) {
 			console.log(stdout);
 			if (fs.existsSync(mobiFilename)) {
 				console.log('Mobi ' + mobiFilename + ' created.');
